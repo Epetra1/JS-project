@@ -1,29 +1,3 @@
-products = [{
-    name: 'Black and Gray Athletic Cotton Socks - 6 Pairs',
-    image:'images/products/athletic-cotton-socks-6-pairs.jpg',
-    rating: {
-        stars:4.5,
-        count:87},
-    priceCent:1090
-},
-{
-    name: ' Intermediate Size Basketball',
-    image:'images/products/intermediate-composite-basketball.jpg',
-    rating: {
-        stars:4.5,
-        count:127},
-    priceCent:2095
-},
-
-{
-    name: 'Adults Plain Cotton T-Shirt - 2 Pack',
-    image:'images/products/adults-plain-cotton-tshirt-2-pack-teal.jpg',
-    rating: {
-        stars:4.5,
-        count:56},
-    priceCent:799
-}
-]
 
 let productsHTML = ''
 products.forEach((product)=>{
@@ -46,9 +20,8 @@ products.forEach((product)=>{
           </div>
 
           <div class="product-price">
-          ${(product.priceCent/100).toFixed(2)}$
+          ${(product.priceCents/100).toFixed(2)}$
           </div>
-
           <div class="product-quantity-container">
             <select>
               <option selected value="1">1</option>
@@ -71,10 +44,41 @@ products.forEach((product)=>{
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-card-button" data-product-id = '${product.id}'>
             Add to Cart
           </button>
         </div>`
-        document.querySelector('.js-products-grid').innerHTML = productsHTML
-        
+
 })
+document.querySelector('.js-products-grid').innerHTML = productsHTML
+ let exists;       
+document.querySelectorAll('.js-add-to-card-button').forEach((button)=>{
+  button.addEventListener('click',()=>{
+    const {productId} = button.dataset
+  
+    cart.forEach((value)=>{
+      if(value.productId ===productId){
+        exists = value
+      }
+      
+
+    })
+    if(exists){
+      exists.quantity += 1 
+    }else{
+      cart.push({
+        productId:productId,
+        quantity:1
+      })
+    }
+    //calculating cart quantity
+    let cartQuantity= 0;
+    cart.forEach((value)=>{
+      cartQuantity += value.quantity
+
+    })
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    console.log(cartQuantity)
+ })
+})
+
