@@ -53,11 +53,11 @@ function cartItemRender(){
                     </div>
                     <div class="product-quantity">
                       <span>
-                        Quantity: <span class="quantity-label">${item.quantity}</span>
+                        Quantity: <span class="quantity-label-update-${item.productId} quantity-label">${item.quantity}</span>
                       </span>
                       <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id = '${item.productId}'>
                         Update
-                      </span><input type='text' class='js-quantity-update quantity-input'><span class= 'js-quantity-update save-quantity-link link-primary quantity-input '>Save</span>
+                      </span><input type='text' class='js-quantity-update-${item.productId} js-quantity-input-${item.productId} quantity-input'><span class= 'js-quantity-update-${item.productId} js-save-quantity-link-${item.productId} link-primary quantity-input '>Save</span>
                       <span class="delete-quantity-link link-primary js-delete-product" data-product-delete = '${item.productId}'>
                         Delete
                       </span>
@@ -141,16 +141,45 @@ function cartItemRender(){
     document.querySelectorAll('.js-update-quantity-link').forEach((value)=>{
         value.addEventListener('click', ()=>{
             const {productId} = value.dataset
-            document.querySelectorAll('.js-quantity-update').classList.add('quantity-input-inable')
+            document.querySelectorAll(`.js-quantity-update-${productId}`).forEach(
+                (classe)=>{
+                    classe.classList.add('quantity-input-inable')
+                    document.querySelector(`.js-save-quantity-link-${productId}`).addEventListener('click', (event)=>{
+                        cart.forEach((button)=>{
+                            if(button.productId==productId){
+                                
+
+                                let quantity = document.querySelector(`.js-quantity-input-${productId}`).value;
+                                if(!Number(quantity)&&Number(quantity)>10){
+                                    alert('Invalid input, please enter valid number not more then 10')
+
+                                }else{
+                                    button.quantity=Number(quantity);
+                                    document.querySelector(`.quantity-label-update-${productId}`).innerHTML=quantity;
+
+                                }
+                                
+                              
+
+                                
+                                
+                            }
+                            
+                        })
+                        classe.classList.remove('quantity-input-inable')
+                        saveCart()
+                    }
+                    )
+                    
+
+
+                }
+            )
+            
         })
 
     })
-
-    
-
 }
-
-
 
 
 
