@@ -1,6 +1,7 @@
-import {cart, addToCart} from '../data/cart.js'
+import {cart, addToCart, updateCartQuantity} from '../data/cart.js'
 import {products} from '../data/products.js'
 import {centsToDollers} from '../scripts/utils/moneyItem.js'
+
 let productsHTML = ''
 products.forEach((product)=>{
     productsHTML += `       <div class="product-container">
@@ -53,23 +54,26 @@ products.forEach((product)=>{
 
 })
 
- //calculating cart quantity
-function undateCartQuantity(){
-  let cartQuantity= 0;
-  cart.forEach((value)=>{
-    cartQuantity += value.quantity
+//calculating cart quantity
 
-  })
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-  console.log(cart)
-}
+//  function undateCartQuantity(){
+//   let cartQuantity='';
+//   cart.forEach((value)=>{
+//     cartQuantity =Number(cartQuantity)+ value.quantity
+
+//   })
+//   document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+//   return cartQuantity;
+// }
+document.querySelector('.js-cart-quantity').innerHTML = updateCartQuantity();
 document.querySelector('.js-products-grid').innerHTML = productsHTML
      
 document.querySelectorAll('.js-add-to-card-button').forEach((button)=>{
   button.addEventListener('click',()=>{
     const {productId} = button.dataset
     addToCart(productId);
-    undateCartQuantity()
+    document.querySelector('.js-cart-quantity').innerHTML = updateCartQuantity();
+
     //for added to cart 
     const element = document.querySelector(`.js-added-to-cart-${productId}`)
     let instanceID=null;
