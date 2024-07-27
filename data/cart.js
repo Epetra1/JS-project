@@ -17,7 +17,8 @@ export function addToCart(productId){
     }else{
       cart.push({
         productId:productId,
-        quantity:Number(document.querySelector(`.js-product-quantity-${productId}`).value)
+        quantity:Number(document.querySelector(`.js-product-quantity-${productId}`).value),
+        deiveryId:'1'
       })
     }
 
@@ -32,4 +33,10 @@ export function addToCart(productId){
   
     })
     return cartQuantity;
+  }
+  
+  function updateDeliveryData(cardItem){
+    
+
+
   }

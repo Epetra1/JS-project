@@ -1,6 +1,8 @@
 import {cart,saveCart,updateCartQuantity} from '../data/cart.js'
+import {deliveryOptions} from '../data/deliveryOptions.js'
 import {products} from '../data/products.js'
 import {centsToDollers} from '../scripts/utils/moneyItem.js'
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
 
 
 
@@ -35,9 +37,21 @@ function cartItemRender(){
                 matchingProduct = product;
             }
         })
+
+        let deliveryOption;
+
+        deliveryOptions.forEach((option)=>{
+            if(option.id === item.deiveryId){
+                deliveryOption =option
+            }
+        })
+        
+        let deliveryDay = dayjs().add(Number(deliveryOption.days),'day').format('dddd, MMMM D')
+         
+
         let HTML = `<div class="cart-item-container">
                 <div class="delivery-date">
-                  Delivery date: Tuesday, June 21
+                  Delivery date: ${deliveryDay}
                 </div>
     
                 <div class="cart-item-details-grid">
@@ -68,44 +82,8 @@ function cartItemRender(){
                     <div class="delivery-options-title">
                       Choose a delivery option:
                     </div>
-                    <div class="delivery-option">
-                      <input type="radio" checked
-                        class="delivery-option-input"
-                        name="delivery-option-${matchingProduct.id}">
-                      <div>
-                        <div class="delivery-option-date">
-                          Tuesday, June 21
-                        </div>
-                        <div class="delivery-option-price">
-                          FREE Shipping
-                        </div>
-                      </div>
-                    </div>
-                    <div class="delivery-option">
-                      <input type="radio"
-                        class="delivery-option-input"
-                        name="delivery-option-${matchingProduct.id}">
-                      <div>
-                        <div class="delivery-option-date">
-                          Wednesday, June 15
-                        </div>
-                        <div class="delivery-option-price">
-                          $4.99 - Shipping
-                        </div>
-                      </div>
-                    </div>
-                    <div class="delivery-option">
-                      <input type="radio"
-                        class="delivery-option-input"
-                        name="delivery-option-${matchingProduct.id}">
-                      <div>
-                        <div class="delivery-option-date">
-                          Monday, June 13
-                        </div>
-                        <div class="delivery-option-price">
-                          $9.99 - Shipping
-                        </div>
-                      </div>
+                    ${deliveryOptionsHTML(matchingProduct,item)}
+                    
                     </div>
                   </div>
                 </div>
@@ -115,6 +93,37 @@ function cartItemRender(){
     
     
     })
+
+    function deliveryOptionsHTML(matchingProduct,item){
+        let HTML =''
+        deliveryOptions.forEach((deliveryOption)=>{
+            let abc = dayjs();
+            let deliveryDay =abc.add(Number(deliveryOption.days),'day').format('dddd, MMMM D')
+            let pricestring = deliveryOption.priceCents === 0?'Free':`$${centsToDollers(deliveryOption.priceCents)}`
+            let isChecked = deliveryOption.id === item.deiveryId
+            console.log(isChecked)
+
+        HTML +=`
+                    <div class="delivery-option">
+                      <input type="radio" ${isChecked?'checked':''}
+                        class="delivery-option-input" data-delivery-id ='${g}'
+                        name="delivery-option-${matchingProduct.id}">
+                      <div>
+                        <div class="delivery-option-date">
+                          ${deliveryDay}
+                        </div>
+                        <div class="delivery-option-price">
+                          ${pricestring} Shipping
+                        </div>
+                      </div>
+                    </div>`
+            
+
+        })
+
+        return HTML;
+    }
+    
 
     document.querySelector('.js-order-summary').innerHTML = checkoutHTML
 
@@ -138,6 +147,8 @@ function cartItemRender(){
 
 
     })
+    //logic for quantity update
+    let quantityTruth
     document.querySelectorAll('.js-update-quantity-link').forEach((value)=>{
         value.addEventListener('click', ()=>{
             const {productId} = value.dataset
@@ -145,34 +156,29 @@ function cartItemRender(){
                 (classe)=>{
                     classe.classList.add('quantity-input-inable')
                     document.querySelector(`.js-save-quantity-link-${productId}`).addEventListener('click', (event)=>{
+                        
                         cart.forEach((button)=>{
                             if(button.productId==productId){
                                 
 
                                 let quantity = document.querySelector(`.js-quantity-input-${productId}`).value;
-                                if(!Number(quantity)&&Number(quantity)>10){
-                                    alert('Invalid input, please enter valid number not more then 10')
-
-                                }else{
+                                quantityTruth = Number(quantity)>10||!Number.isInteger(Number(quantity))
+                                if(!quantityTruth){
                                     button.quantity=Number(quantity);
                                     document.querySelector(`.quantity-label-update-${productId}`).innerHTML=quantity;
-
                                 }
-                                
-                              
-
-                                
-                                
+                                else{
+                                    alert('error')
+                                    return;
+                                }
                             }
-                            
+                    
                         })
+                        
                         classe.classList.remove('quantity-input-inable')
                         saveCart()
                     }
                     )
-                    
-
-
                 }
             )
             
@@ -180,7 +186,6 @@ function cartItemRender(){
 
     })
 }
-
-
+//logic end 
 
 
