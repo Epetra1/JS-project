@@ -70,6 +70,7 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML
      
 document.querySelectorAll('.js-add-to-card-button').forEach((button)=>{
   button.addEventListener('click',()=>{
+    //this is to recalculate the total 
     const {productId} = button.dataset
     addToCart(productId);
     document.querySelector('.js-cart-quantity').innerHTML = updateCartQuantity();

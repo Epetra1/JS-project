@@ -1,6 +1,6 @@
 import {cart,saveCart,updateCartQuantity} from '../../data/cart.js'
 import {deliveryOptions} from '../../data/deliveryOptions.js'
-import {products} from '../../data/products.js'
+import {products,getProduct} from '../../data/products.js'
 import {centsToDollers} from '../utils/moneyItem.js'
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
 
@@ -32,12 +32,7 @@ export function cartItemRender(){
     let checkoutHTML = ''
     cart.forEach((item)=>{
        
-        let matchingProduct;
-        products.forEach((product)=>{
-            if(product.id === item.productId){
-                matchingProduct = product;
-            }
-        })
+        let matchingProduct = getProduct(item)
 
         let deliveryOption;
 
