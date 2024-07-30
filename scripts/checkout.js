@@ -20,6 +20,7 @@ import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
 
 //  return cartQuantity;
 // }
+console.log(cart)
 function updateCheckout(){
 document.querySelector('.js-total-item-in-card').innerHTML = updateCartQuantity();
 
@@ -41,7 +42,7 @@ function cartItemRender(){
         let deliveryOption;
 
         deliveryOptions.forEach((option)=>{
-            if(option.id === item.deiveryId){
+            if(option.id === item.deliveryId){
                 deliveryOption =option
             }
         })
@@ -100,13 +101,13 @@ function cartItemRender(){
             let abc = dayjs();
             let deliveryDay =abc.add(Number(deliveryOption.days),'day').format('dddd, MMMM D')
             let pricestring = deliveryOption.priceCents === 0?'Free':`$${centsToDollers(deliveryOption.priceCents)}`
-            let isChecked = deliveryOption.id === item.deiveryId
+            let isChecked = deliveryOption.id === item.deliveryId
             console.log(isChecked)
 
         HTML +=`
                     <div class="delivery-option">
                       <input type="radio" ${isChecked?'checked':''}
-                        class="delivery-option-input" data-delivery-id ='${g}'
+                        class="delivery-option-input" data-cart-item='${JSON.stringify(item)}' data-delivery-option='${JSON.stringify(deliveryOption)}'
                         name="delivery-option-${matchingProduct.id}">
                       <div>
                         <div class="delivery-option-date">
@@ -123,6 +124,7 @@ function cartItemRender(){
 
         return HTML;
     }
+
     
 
     document.querySelector('.js-order-summary').innerHTML = checkoutHTML
@@ -147,6 +149,25 @@ function cartItemRender(){
 
 
     })
+    document.querySelectorAll('.delivery-option-input').forEach((value)=>{
+      value.addEventListener('click',()=>{
+        console.log('hello')
+        const cardItem = JSON.parse(value.dataset.cartItem);
+        const deliveryOption = JSON.parse(value.dataset.deliveryOption);
+        cart.forEach((event)=>{
+          
+          if(event.productId === cardItem.productId){
+              event.deliveryId =deliveryOption.id
+          }
+          saveCart()
+          cartItemRender()
+          console.log(cart)
+
+      })
+      })
+    })
+    //logic for dalivary day update 
+
     //logic for quantity update
     let quantityTruth
     document.querySelectorAll('.js-update-quantity-link').forEach((value)=>{

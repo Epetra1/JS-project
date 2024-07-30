@@ -1,4 +1,5 @@
 export const cart =JSON.parse(localStorage.getItem('cart'))
+
 export function saveCart(){
     localStorage.setItem('cart',JSON.stringify(cart));
 
@@ -18,7 +19,7 @@ export function addToCart(productId){
       cart.push({
         productId:productId,
         quantity:Number(document.querySelector(`.js-product-quantity-${productId}`).value),
-        deiveryId:'1'
+        deliveryId:'1'
       })
     }
 
