@@ -31,7 +31,7 @@ document.querySelector('.js-total-item-in-card').innerHTML = updateCartQuantity(
 export function cartItemRender(){
     let checkoutHTML = ''
     cart.forEach((item)=>{
-       
+       console.log('hello oooooooooooooooo ' + item.deliveryId)
         let matchingProduct = getProduct(item)
 
         let deliveryOption;
@@ -39,9 +39,10 @@ export function cartItemRender(){
         deliveryOptions.forEach((option)=>{
             if(option.id === item.deliveryId){
                 deliveryOption =option
+                
             }
         })
-        
+        console.log(deliveryOption)
         let deliveryDay = dayjs().add(Number(deliveryOption.days),'day').format('dddd, MMMM D')
          
 

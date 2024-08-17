@@ -1,10 +1,18 @@
 import {paymentSummery,paymentView} from '../scripts/checkout/payment.js'
-export const cart =JSON.parse(localStorage.getItem('cart'))
+export const cart =JSON.parse(localStorage.getItem('cart'))||[]
 
-export function saveCart(){
+export function saveCart(fp){
+  if(fp==='frontPage'){
+    localStorage.setItem('cart',JSON.stringify(cart));
+    paymentSummery()
+
+  }else{
     localStorage.setItem('cart',JSON.stringify(cart));
     paymentSummery()
     paymentView()
+
+  }
+
 
 
 }
@@ -27,7 +35,7 @@ export function addToCart(productId){
       })
     }
 
-    saveCart()
+    saveCart('frontPage')
   
   }
   //calculate total quantity in card 
